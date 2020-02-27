@@ -32,6 +32,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "husky": "^4.2.3",
     "jest": "^25.1.0",
+    "lint-staged": "^10.0.8",
     "nodemon": "^2.0.2",
     "prettier": "^1.19.1",
     "sucrase": "^3.12.1",
@@ -54,7 +55,14 @@
   },
   "husky": {
     "hooks": {
+      "pre-commit": "lint-staged",
       "pre-push": "git diff HEAD --quiet && yarn test"
     }
+  },
+  "lint-staged": {
+    "src/**/*.{js,ts}": [
+      "npx prettier --write",
+      "eslint --ext .ts,.js, src/"
+    ]
   }
 }
