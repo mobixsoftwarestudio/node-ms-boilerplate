@@ -30,4 +30,8 @@ app.post('/', (req, res) => {
   }
 });
 
-app.listen(3434);
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(3434);
+}
+
+module.exports = app;
