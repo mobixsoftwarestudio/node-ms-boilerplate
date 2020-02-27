@@ -2,6 +2,11 @@ import express from 'express';
 import { isEmpty } from 'lodash';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
+import { config } from 'dotenv';
+config();
+
+import database from './database/mongoose';
+database();
 
 const app = express();
 
