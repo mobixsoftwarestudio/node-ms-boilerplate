@@ -8,8 +8,10 @@ import { config } from 'dotenv';
 config();
 
 import database from './database/mongoose';
-database();
-
+// TODO: tests with db, remove this condition
+if (process.env.NODE_ENV !== 'test') {
+  database();
+}
 const app = express();
 
 app.use(helmet());
