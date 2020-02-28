@@ -47,8 +47,8 @@ const localStrategy = new passportLocal.Strategy(
 
 const jwtStrategy = new passportJwt.Strategy(
   jwtOpts,
-  (payload: { id: string }, done: passportJwt.VerifiedCallback) => {
-    const user = USERS_MOCK[payload.id] || null;
+  (payload: { email: string }, done: passportJwt.VerifiedCallback) => {
+    const user = USERS_MOCK.find((user) => user.email === payload.email) || null;
     if (user) {
       return done(null, user);
     } else {
