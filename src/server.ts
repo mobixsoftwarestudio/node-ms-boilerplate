@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import bodyParser from 'body-parser';
 import passport from 'passport';
 import routes from './modules/routes';
+import * as Sentry from '@sentry/node';
 import { config } from 'dotenv';
 config();
 
@@ -12,12 +13,17 @@ import database from './database/mongoose';
 if (process.env.NODE_ENV !== 'test') {
   database();
 }
+
+Sentry.init({ dsn: process.env.DNS_SENTRY });
+
 const app = express();
 
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
+app.use(Sentry.Handlers.requestHandler());
+app.use(Sentry.Handlers.errorHandler());
 
 const data = [
   { name: 'Name', id: 1 },
