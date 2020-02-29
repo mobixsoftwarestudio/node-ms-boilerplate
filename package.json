@@ -10,6 +10,7 @@
     "test-watch": "export NODE_ENV=test && jest --watch"
   },
   "dependencies": {
+    "@hapi/joi": "^17.1.0",
     "body-parser": "^1.19.0",
     "chalk": "^3.0.0",
     "dotenv": "^8.2.0",
