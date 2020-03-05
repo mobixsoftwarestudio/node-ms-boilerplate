@@ -5,12 +5,12 @@ import jwt from 'jsonwebtoken';
 import ErrorHandler from './error';
 
 const USERS_MOCK = [
-  // {
-  //   id: 1,
-  //   name: 'Lucas Harada',
-  //   email: 'lucas@mobixtec.com',
-  //   password: '123123',
-  // },
+  {
+    id: 1,
+    name: 'Lucas Harada',
+    email: 'lucas@mobixtec.com',
+    password: '123123',
+  },
   {
     id: 2,
     name: 'Renato Rodrigues',
@@ -44,7 +44,7 @@ const localStrategy = new passportLocal.Strategy(
       (mockUser) => mockUser.email === email && mockUser.password === password,
     );
     if (!user) {
-      return done(new ErrorHandler(401, 'Email and password combination is invalid.'), null);
+      return done(new ErrorHandler(401, 'Email and password combination is invalid.'));
     }
     return done(null, user, { message: 'Signed in successfully.' });
   },

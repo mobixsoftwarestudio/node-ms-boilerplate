@@ -12,7 +12,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     if (error) throw new ErrorHandler(400, 'Email and password combination is invalid.', error);
 
     passport.authenticate('local', { session: false }, (err, user, info) => {
-      if (err) throw err;
+      if (err) throw new ErrorHandler(500, err.message);
       if (!user) throw new ErrorHandler(403, info.message);
 
       const token = getToken(user);
@@ -23,6 +23,6 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   }
 };
 
-export const protectedRoute = async (req: Request, res: Response) => {
+export const protectedRoute = async (_req: Request, res: Response) => {
   return res.status(200).json({ name: 'protected route' });
 };

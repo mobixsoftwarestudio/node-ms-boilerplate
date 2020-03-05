@@ -1,14 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
+import { CompressionTypes } from 'kafkajs';
+import { stringify } from 'flatted/cjs';
+import { Dictionary } from 'lodash';
 
 export default class ErrorHandler extends Error {
   statusCode: number;
-  fieldErrors: Array<string>;
+  fieldErrors: Dictionary<string[]>;
   nonFieldErrors: Array<string>;
 
   constructor(
     statusCode: number,
     message: string,
-    fieldErrors?: Array<string>,
+    fieldErrors?: Dictionary<string[]>,
     nonFieldErrors?: Array<string>,
   ) {
     super(message);
@@ -30,9 +33,25 @@ export const errorHandlerMiddleware = (
     field_errors: fieldErrors,
     non_field_errors: nonFieldErrors,
   });
-  // const logObj = {
-  //   req,
-  //   res,
-  //   httpStatus: statusCode,
-  // };
+
+  const { locals, ...response } = res;
+  const { producer } = locals;
+
+  const logObj = {
+    service: process.env.KAFKA_CLIENT || 'xxx-service',
+    request: req,
+    response,
+    httpStatus: statusCode,
+  };
+  producer.send({
+    topic: 'logging.errors',
+    compression: CompressionTypes.GZIP,
+    messages: [
+      {
+        value: stringify(logObj),
+      },
+    ],
+  });
+
+  next();
 };

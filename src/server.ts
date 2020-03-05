@@ -1,10 +1,11 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import { isEmpty } from 'lodash';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
 import passport from 'passport';
 import * as Sentry from '@sentry/node';
 import { config } from 'dotenv';
+import { Kafka } from 'kafkajs';
 import routes from './modules/routes';
 import database from './database/mongoose';
 import { errorHandlerMiddleware } from './utils/error';
@@ -18,12 +19,23 @@ config();
 
 Sentry.init({ dsn: process.env.DNS_SENTRY });
 
+const kafka = new Kafka({
+  clientId: process.env.KAFKA_CLIENT || 'xxx-service',
+  brokers: [process.env.KAFKA_BROKER_URL || 'localhost:9092'],
+});
+const producer = kafka.producer();
+producer.connect();
+
 const app = express();
 
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
+app.use((_req: Request, res: Response, next: NextFunction) => {
+  res.locals.producer = producer;
+  next();
+});
 app.use(Sentry.Handlers.requestHandler());
 
 const data = [
