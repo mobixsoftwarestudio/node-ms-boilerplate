@@ -4,6 +4,8 @@ import lodash from 'lodash';
 export const structureValidationScheme = (
   error: { message: string; context: { key: string } }[],
 ) => {
+  if (!error) return null;
+
   const errorsMessages = error.map((e) => {
     const msg = lodash.pick(e, ['message']);
     return msg.message;

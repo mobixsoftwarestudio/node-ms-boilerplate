@@ -3,16 +3,18 @@ import { isEmpty } from 'lodash';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
 import passport from 'passport';
-import routes from './modules/routes';
 import * as Sentry from '@sentry/node';
 import { config } from 'dotenv';
+import routes from './modules/routes';
+import database from './database/mongoose';
+import { errorHandlerMiddleware } from './utils/error';
+
 config();
 
-import database from './database/mongoose';
-// TODO: tests with db, remove this condition
-if (process.env.NODE_ENV !== 'test') {
-  database();
-}
+//TODO: tests with db, remove this condition
+// if (process.env.NODE_ENV !== 'test') {
+//   database();
+// }
 
 Sentry.init({ dsn: process.env.DNS_SENTRY });
 
@@ -23,7 +25,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(Sentry.Handlers.requestHandler());
-app.use(Sentry.Handlers.errorHandler());
 
 const data = [
   { name: 'Name', id: 1 },
@@ -44,6 +45,9 @@ app.post('/', (req, res) => {
 });
 
 app.use(routes);
+
+app.use(Sentry.Handlers.errorHandler());
+app.use(errorHandlerMiddleware);
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(3434);

@@ -2,19 +2,20 @@ import passport from 'passport';
 import passportLocal from 'passport-local';
 import passportJwt from 'passport-jwt';
 import jwt from 'jsonwebtoken';
+import ErrorHandler from './error';
 
 const USERS_MOCK = [
-  {
-    id: 1,
-    name: 'Lucas Harada',
-    email: 'lucas@mobixtec.com',
-    password: 'abcd',
-  },
+  // {
+  //   id: 1,
+  //   name: 'Lucas Harada',
+  //   email: 'lucas@mobixtec.com',
+  //   password: '123123',
+  // },
   {
     id: 2,
     name: 'Renato Rodrigues',
     email: 'renato@mobixtec.com',
-    password: 'efgh',
+    password: '123123',
   },
 ];
 
@@ -34,14 +35,18 @@ const localStrategy = new passportLocal.Strategy(
     usernameField: 'email',
     passwordField: 'password',
   },
-  (email: string, password: string, cb: Function) => {
+  (
+    email: string,
+    password: string,
+    done: (error: Error, user?: object, options?: passportLocal.IVerifyOptions) => void,
+  ) => {
     const user = USERS_MOCK.find(
       (mockUser) => mockUser.email === email && mockUser.password === password,
     );
     if (!user) {
-      return cb(null, false, { message: 'Incorrect email or password.' });
+      return done(new ErrorHandler(401, 'Email and password combination is invalid.'), null);
     }
-    return cb(null, user, { message: 'Signed in successfully.' });
+    return done(null, user, { message: 'Signed in successfully.' });
   },
 );
 
@@ -49,10 +54,10 @@ const jwtStrategy = new passportJwt.Strategy(
   jwtOpts,
   (payload: { email: string }, done: passportJwt.VerifiedCallback) => {
     const user = USERS_MOCK.find((user) => user.email === payload.email) || null;
-    if (user) {
-      return done(null, user);
+    if (!user) {
+      return done(new ErrorHandler(404, 'User not found'));
     } else {
-      return done(new Error('User not found'), null);
+      return done(null, user);
     }
   },
 );

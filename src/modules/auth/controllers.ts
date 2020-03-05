@@ -1,35 +1,28 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
-import { getToken } from '../../passport-helper';
 import { loginValidation } from './validations';
+import ErrorHandler from '../../utils/error';
+import { getToken } from '../../utils/passport-helper';
 
-export const login = async (req: Request, res: Response) => {
-  const error = loginValidation(req.body);
+export const login = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const error = loginValidation(req.body);
 
-  if (error)
-    return res.status(400).send({
-      success: false,
-      error,
-    });
+    if (error) throw new ErrorHandler(400, 'Email and password combination is invalid.', error);
 
-  passport.authenticate('local', { session: false }, (err, user, info) => {
-    if (err) {
-      return res.status(400).json({
-        message: info.message,
-      });
-    }
-    if (!user) {
-      return res.status(403).json({
-        message: info.message,
-      });
-    }
+    passport.authenticate('local', { session: false }, (err, user, info) => {
+      if (err) throw err;
+      if (!user) throw new ErrorHandler(403, info.message);
 
-    const token = getToken(user);
-    return res.status(200).json({ token });
-  })(req, res);
+      const token = getToken(user);
+      return res.status(200).json({ token });
+    })(req, res);
+  } catch (error) {
+    next(error);
+  }
 };
 
-export const protect = async (req: Request, res: Response) => {
+export const protectedRoute = async (req: Request, res: Response) => {
   return res.status(200).json({ name: 'protected route' });
 };

@@ -22,5 +22,6 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   rules: {
     'prettier/prettier': ['error', prettierOptions],
+    '@typescript-eslint/camelcase': ['error', { properties: 'never' }],
   },
 };
