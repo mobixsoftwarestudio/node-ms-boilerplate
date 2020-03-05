@@ -6,6 +6,7 @@ import passport from 'passport';
 import * as Sentry from '@sentry/node';
 import { config } from 'dotenv';
 import { Kafka } from 'kafkajs';
+import { parse } from 'flatted/cjs';
 import routes from './modules/routes';
 import database from './database/mongoose';
 import { errorHandlerMiddleware } from './utils/error';
@@ -24,6 +25,7 @@ const kafka = new Kafka({
   brokers: [process.env.KAFKA_BROKER_URL || 'localhost:9092'],
 });
 const producer = kafka.producer();
+const consumer = kafka.consumer({ groupId: 'logstash-group' });
 
 const app = express();
 
@@ -42,6 +44,18 @@ const data = [
   { name: 'Place', id: 2 },
   { name: 'Object', id: 3 },
 ];
+
+const startListening = async (): Promise<void> => {
+  await consumer.connect();
+  await consumer.subscribe({ topic: 'logging.errors', fromBeginning: true });
+  await consumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      const prefix = `${topic}[${partition} | ${message.offset}] / ${message.timestamp}`;
+      const messageValue = parse(message.value);
+      console.log(`- ${prefix} ${messageValue}`);
+    },
+  });
+};
 
 app.get('/', (req, res) => {
   return res.json(data);
@@ -62,6 +76,7 @@ app.use(errorHandlerMiddleware);
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(3434);
+  startListening();
 }
 
 module.exports = app;
