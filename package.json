@@ -4,8 +4,11 @@
   "main": "src/server.ts",
   "license": "MIT",
   "scripts": {
-    "dev": "export NODE_ENV=development&& nodemon src/server.ts",
-    "build": "",
+    "build": "npm run build-ts",
+    "build-ts": "tsc",
+    "dev": "export NODE_ENV=development && nodemon src/server.ts",
+    "serve": "export NODE_ENV=production && node dist/server.js",
+    "start": "npm run serve",
     "test": "export NODE_ENV=test && jest",
     "test-watch": "export NODE_ENV=test && jest --watch"
   },
