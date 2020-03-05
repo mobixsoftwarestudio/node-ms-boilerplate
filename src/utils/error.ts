@@ -21,12 +21,12 @@ export default class ErrorHandler extends Error {
   }
 }
 
-export const errorHandlerMiddleware = (
+export const errorHandlerMiddleware = async (
   err: ErrorHandler,
   req: Request,
   res: Response,
   next: NextFunction,
-): void => {
+): Promise<void> => {
   const { statusCode, message, fieldErrors, nonFieldErrors } = err;
   res.status(statusCode).json({
     message,
@@ -43,7 +43,8 @@ export const errorHandlerMiddleware = (
     response: res,
     httpStatus: statusCode,
   };
-  producer.send({
+  await producer.connect();
+  await producer.send({
     topic: 'logging.errors',
     compression: CompressionTypes.GZIP,
     messages: [
@@ -52,6 +53,7 @@ export const errorHandlerMiddleware = (
       },
     ],
   });
+  await producer.disconnect();
 
   next();
 };

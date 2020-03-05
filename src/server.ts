@@ -24,7 +24,6 @@ const kafka = new Kafka({
   brokers: [process.env.KAFKA_BROKER_URL || 'localhost:9092'],
 });
 const producer = kafka.producer();
-producer.connect();
 
 const app = express();
 
