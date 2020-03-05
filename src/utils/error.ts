@@ -34,13 +34,13 @@ export const errorHandlerMiddleware = (
     non_field_errors: nonFieldErrors,
   });
 
-  const { locals, ...response } = res;
+  const { locals } = res;
   const { producer } = locals;
 
   const logObj = {
     service: process.env.KAFKA_CLIENT || 'xxx-service',
     request: req,
-    response,
+    response: res,
     httpStatus: statusCode,
   };
   producer.send({
