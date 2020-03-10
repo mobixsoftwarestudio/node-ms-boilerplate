@@ -53,6 +53,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "husky": "^4.2.3",
     "jest": "^25.1.0",
+    "jest-junit": "^10.0.0",
     "lint-staged": "^10.0.8",
     "nodemon": "^2.0.2",
     "prettier": "^1.19.1",
@@ -77,6 +78,10 @@
     "coverageReporters": [
       "text",
       "cobertura"
+    ],
+    "reporters": [
+      "default",
+      "jest-junit"
     ]
   },
   "husky": {
@@ -90,5 +95,10 @@
       "npx prettier --write",
       "eslint --ext .ts,.js, src/"
     ]
+  },
+  "jest-junit": {
+    "outputDirectory": "./output/report/junit/",
+    "outputName": "junit.xml",
+    "usePathForSuiteName": "true"
   }
 }
