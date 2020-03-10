@@ -10,7 +10,8 @@
     "serve": "export NODE_ENV=production && node dist/server.js",
     "start": "npm run serve",
     "test": "export NODE_ENV=test && jest",
-    "test-watch": "export NODE_ENV=test && jest --watch"
+    "test-watch": "export NODE_ENV=test && jest --watch",
+    "test-ci": "export NODE_ENV=test && jest --coverage --coverageDirectory=output/coverage/jest"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.0",
@@ -52,6 +53,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "husky": "^4.2.3",
     "jest": "^25.1.0",
+    "jest-junit": "^10.0.0",
     "lint-staged": "^10.0.8",
     "nodemon": "^2.0.2",
     "prettier": "^1.19.1",
@@ -72,6 +74,14 @@
     },
     "testMatch": [
       "**/__tests__/*.+(ts|js)"
+    ],
+    "coverageReporters": [
+      "text",
+      "cobertura"
+    ],
+    "reporters": [
+      "default",
+      "jest-junit"
     ]
   },
   "husky": {
@@ -85,5 +95,10 @@
       "npx prettier --write",
       "eslint --ext .ts,.js, src/"
     ]
+  },
+  "jest-junit": {
+    "outputDirectory": "./output/report/junit/",
+    "outputName": "junit.xml",
+    "usePathForSuiteName": "true"
   }
 }

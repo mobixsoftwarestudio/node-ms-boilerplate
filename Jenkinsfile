@@ -13,8 +13,14 @@ pipeline {
         }
         stage('Test') { 
             steps {
-                sh 'yarn test' 
+                sh 'yarn test-ci' 
             }
+						post {
+							always {
+								step([$class: 'CoberturaPublisher', coberturaReportFile: 'output/coverage/jest/cobertura-coverage.xml'])
+								junit 'output/report/junit/junit.xml'
+							}
+						}
         }
     }
 }
