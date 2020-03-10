@@ -10,7 +10,8 @@
     "serve": "export NODE_ENV=production && node dist/server.js",
     "start": "npm run serve",
     "test": "export NODE_ENV=test && jest",
-    "test-watch": "export NODE_ENV=test && jest --watch"
+    "test-watch": "export NODE_ENV=test && jest --watch",
+    "test-ci": "export NODE_ENV=test && jest --coverage --coverageDirectory=output/coverage/jest"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.0",
@@ -72,6 +73,10 @@
     },
     "testMatch": [
       "**/__tests__/*.+(ts|js)"
+    ],
+    "coverageReporters": [
+      "text",
+      "cobertura"
     ]
   },
   "husky": {
