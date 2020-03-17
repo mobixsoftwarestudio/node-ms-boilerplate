@@ -25,8 +25,7 @@ pipeline {
         stage('Publish Docker Image for development') {
             steps {
                 script {
-                    def dockerHome = tool 'myDocker'
-                    env.PATH = "${dockerHome}/bin:${env.PATH}"
+                    checkout scm
                     app = docker.build("ytalopigeon/node-ms-boilerplate:development")
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
                         app.push("ytalopigeon/node-ms-boilerplate:development")
