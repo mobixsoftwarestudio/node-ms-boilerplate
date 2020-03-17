@@ -1,24 +1,17 @@
 pipeline {
-    agent any
-    stages {
-        stage('Configuration') {
-            agent {
+    agent {
                 docker {
                     image 'node:12-slim'
                     args '-p 3434:3434'
                 }
             }
+    stages {
+        stage('Configuration') {
             steps {
                 sh 'yarn install'
             }
         }
         stage('Test') { 
-            agent {
-                docker {
-                    image 'node:12-slim'
-                    args '-p 3434:3434'
-                }
-            }
             steps {
                 sh 'yarn test-ci' 
             }
@@ -32,6 +25,8 @@ pipeline {
         stage('Publish Docker Image for development') {
             steps {
                 script {
+                    def dockerHome = tool 'myDocker'
+                    env.PATH = "${dockerHome}/bin:${env.PATH}"
                     app = docker.build("ytalopigeon/node-ms-boilerplate:development")
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
                         app.push("ytalopigeon/node-ms-boilerplate:development")
