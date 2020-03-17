@@ -22,5 +22,13 @@ pipeline {
 							}
 						}
         }
+        stage('Publish Docker Image for development') {
+            steps {
+                app = docker.build("ytalopigeon/node-ms-boilerplate:development")
+                docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                    app.push("ytalopigeon/node-ms-boilerplate:development")
+                }
+            }
+        }
     }
 }
