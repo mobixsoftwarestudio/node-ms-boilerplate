@@ -1,0 +1,19 @@
+---
+
+- name: Deploy Kubernetes
+  gather_facts: false
+  hosts: devservers
+  tasks:
+    - name: Copy file with owner and permission, using symbolic representation
+      copy:
+        src: kubernetes.yaml
+        dest: kubernetes.yaml
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+    - name: Create Deployment from file
+      command: kubectl apply -f kubernetes.yaml
+    # - name: Create a Service object by reading the definition from a file
+    #   k8s:
+    #     state: present
+    #     src: development.yaml

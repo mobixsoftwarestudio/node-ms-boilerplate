@@ -1,0 +1,2 @@
+[devservers]
+134.122.26.55 ansible_port=22 ansible_ssh_user=root ansible_ssh_pass=possopressentiroperigoeocaos

@@ -26,17 +26,28 @@ pipeline {
                 }
             }
         }
-        stage('Publish Docker Image for development') {
+        stage('CD Development') {
             agent any
+            stages {
+                stage("Build/Publish Docker Image"){
                     steps {
                         script {
                             checkout scm
                             app = docker.build("ytalopigeon/node-ms-boilerplate:development")
                             docker.withRegistry('', 'docker-hub-credentials') {
-                                app.push("latest")
+                                app.push("development")
                             }
                         }
                     }
                 }
+                stage("Run Ansible"){
+                    steps {
+                        script {
+                            sh 'ansible-playbook -i deploy/development/hosts deploy/development/deploy.yml'
+                        }
+                    }
+                }
+            }
+        }
     }
 }
