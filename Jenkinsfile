@@ -1,17 +1,24 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:12-slim'
-            args '-p 3434:3434'
-        }
-    }
+    agent any
     stages {
         stage('Configuration') {
+            agent {
+                docker {
+                    image 'node:12-slim'
+                    args '-p 3434:3434'
+                }
+            }
             steps {
                 sh 'yarn install'
             }
         }
         stage('Test') { 
+            agent {
+                docker {
+                    image 'node:12-slim'
+                    args '-p 3434:3434'
+                }
+            }
             steps {
                 sh 'yarn test-ci' 
             }
