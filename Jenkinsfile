@@ -26,8 +26,11 @@ pipeline {
                 }
             }
         }
-        stage('CD Development') {
+        stage('Deliver for development') {
             agent any
+            when {
+                branch 'develop'  
+            }
             stages {
                 stage("Build/Publish Docker Image"){
                     steps {
