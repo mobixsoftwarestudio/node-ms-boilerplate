@@ -5,7 +5,6 @@ pipeline {
             agent {
                         docker {
                             image 'node:12-slim'
-                            args '-p 3434:3434'
                         }
                     }
             stages {
@@ -28,6 +27,7 @@ pipeline {
             }
         }
         stage('Publish Docker Image for development') {
+            agent any
                     steps {
                         script {
                             checkout scm
