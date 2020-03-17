@@ -33,7 +33,7 @@ pipeline {
                             checkout scm
                             app = docker.build("ytalopigeon/node-ms-boilerplate:development")
                             docker.withRegistry('', 'docker-hub-credentials') {
-                                app.push("ytalopigeon/node-ms-boilerplate:development")
+                                app.push("latest")
                             }
                         }
                     }
