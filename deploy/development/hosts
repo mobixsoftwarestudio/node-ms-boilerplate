@@ -1,2 +1,2 @@
 [devservers]
-134.122.26.55 host_key_checking=False ansible_port=22 ansible_ssh_user=root ansible_ssh_pass=possopressentiroperigoeocaos
+134.122.26.55 ansible_ssh_common_args='-o StrictHostKeyChecking=no' ansible_port=22 ansible_ssh_user=root ansible_ssh_pass=possopressentiroperigoeocaos
