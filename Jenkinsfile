@@ -1,26 +1,56 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:12-slim'
-            args '-p 3434:3434'
-        }
-    }
+    agent none
     stages {
-        stage('Configuration') {
-            steps {
-                sh 'yarn install'
+        stage ("Build & Tests"){
+            agent {
+                        docker {
+                            image 'node:12-slim'
+                        }
+                    }
+            stages {
+                stage('Configuration') {
+                    steps {
+                        sh 'yarn install'
+                    }
+                }
+                stage('Test') { 
+                    steps {
+                        sh 'yarn test-ci' 
+                    }
+                                post {
+                                    always {
+                                        step([$class: 'CoberturaPublisher', coberturaReportFile: 'output/coverage/jest/cobertura-coverage.xml'])
+                                        junit 'output/report/junit/junit.xml'
+                                    }
+                                }
+                }
             }
         }
-        stage('Test') { 
-            steps {
-                sh 'yarn test-ci' 
+        stage('Deliver for development') {
+            agent any
+            when {
+                branch 'develop'  
             }
-						post {
-							always {
-								step([$class: 'CoberturaPublisher', coberturaReportFile: 'output/coverage/jest/cobertura-coverage.xml'])
-								junit 'output/report/junit/junit.xml'
-							}
-						}
+            stages {
+                stage("Build/Publish Docker Image"){
+                    steps {
+                        script {
+                            checkout scm
+                            app = docker.build("ytalopigeon/node-ms-boilerplate:development")
+                            docker.withRegistry('', 'docker-hub-credentials') {
+                                app.push("development")
+                            }
+                        }
+                    }
+                }
+                stage("Run Ansible"){
+                    steps {
+                        script {
+                            sh 'ansible-playbook -i deploy/development/hosts deploy/development/deploy.yml'
+                        }
+                    }
+                }
+            }
         }
     }
 }

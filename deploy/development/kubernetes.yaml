@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-ms-boilerplate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-ms-boilerplate
+  template:
+    metadata:
+      labels:
+        app: node-ms-boilerplate
+    spec:
+      containers:
+        - name: node-ms-boilerplate
+          image: ytalopigeon/node-ms-boilerplate:development
+          ports:
+            - containerPort: 3434
+          env:
+            - name: DB_URL
+              value: mongodb://134.122.26.191:27017/corebank_access
+            - name: JWT_SECRET
+              value: thisneedstobestoredsafelyandnevercommited
+            - name: DB_USER
+              value: corebank_access
+            - name: DB_PWD
+              value: 22v@cT?J96q?'mK.2U+;
+            - name: DB_DATABASE
+              value:
+            - name: DB_HOST
+              value:
+            - name: DNS_SENTRY
+              value: https://e6629f22f0c949aa9a2ba8cdfef5b4b1@sentry.io/5041973
+            - name: KAFKA_CLIENT
+              value: node-ms-boilerplate
+            - name: KAFKA_BROKER_URL
+              value: 134.122.26.191:9092
+          imagePullPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-ms-boilerplate
+spec:
+  selector:
+    app: node-ms-boilerplate
+  ports:
+    - protocol: TCP
+      port: 3434
+  type: NodePort
