@@ -14,7 +14,7 @@
     "test-ci": "export NODE_ENV=test && jest --coverage --coverageDirectory=output/coverage/jest"
   },
   "dependencies": {
-    "@hapi/joi": "^17.1.0",
+    "@hapi/joi": "^17.1.1",
     "@sentry/node": "5.13.0",
     "body-parser": "^1.19.0",
     "chalk": "^3.0.0",
