@@ -34,26 +34,28 @@ export const errorHandlerMiddleware = async (
     non_field_errors: nonFieldErrors,
   });
 
-  const { locals } = res;
-  const { producer } = locals;
+  if (process.env.NODE_ENV !== 'test') {
+    const { locals } = res;
+    const { producer } = locals;
 
-  const logObj = {
-    service: process.env.KAFKA_CLIENT || 'xxx-service',
-    request: req,
-    response: res,
-    httpStatus: statusCode,
-  };
-  await producer.connect();
-  await producer.send({
-    topic: 'logging.errors',
-    compression: CompressionTypes.GZIP,
-    messages: [
-      {
-        value: stringify(logObj),
-      },
-    ],
-  });
-  await producer.disconnect();
+    const logObj = {
+      service: process.env.KAFKA_CLIENT || 'xxx-service',
+      request: req,
+      response: res,
+      httpStatus: statusCode,
+    };
+    await producer.connect();
+    await producer.send({
+      topic: 'logging.errors',
+      compression: CompressionTypes.GZIP,
+      messages: [
+        {
+          value: stringify(logObj),
+        },
+      ],
+    });
+    await producer.disconnect();
+  }
 
   next();
 };

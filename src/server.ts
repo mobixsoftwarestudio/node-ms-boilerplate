@@ -13,19 +13,10 @@ import { errorHandlerMiddleware } from './utils/error';
 
 config();
 
-//TODO: tests with db, remove this condition
-// if (process.env.NODE_ENV !== 'test') {
-//   database();
-// }
-
 Sentry.init({ dsn: process.env.DNS_SENTRY });
 
-const kafka = new Kafka({
-  clientId: process.env.KAFKA_CLIENT || 'xxx-service',
-  brokers: [process.env.KAFKA_BROKER_URL || 'localhost:9092'],
-});
-const producer = kafka.producer();
-const consumer = kafka.consumer({ groupId: 'logstash-group' });
+let producer: any;
+let consumer: any;
 
 const app = express();
 
@@ -33,17 +24,32 @@ app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
-app.use((_req: Request, res: Response, next: NextFunction) => {
-  res.locals.producer = producer;
-  next();
-});
-app.use(Sentry.Handlers.requestHandler());
 
-const data = [
-  { name: 'Name', id: 1 },
-  { name: 'Place', id: 2 },
-  { name: 'Object', id: 3 },
-];
+if (process.env.NODE_ENV !== 'test') {
+  const kafka = new Kafka({
+    clientId: process.env.KAFKA_CLIENT || 'xxx-service',
+    brokers: [process.env.KAFKA_BROKER_URL || 'localhost:9092'],
+  });
+  producer = kafka.producer();
+  consumer = kafka.consumer({ groupId: 'logstash-group' });
+
+  app.use((_req: Request, res: Response, next: NextFunction) => {
+    res.locals.producer = producer;
+    next();
+  });
+}
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(Sentry.Handlers.requestHandler());
+}
+
+app.use(routes);
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(Sentry.Handlers.errorHandler());
+}
+
+app.use(errorHandlerMiddleware);
 
 const startListening = async (): Promise<void> => {
   await consumer.connect();
@@ -56,23 +62,6 @@ const startListening = async (): Promise<void> => {
     },
   });
 };
-
-app.get('/', (req, res) => {
-  return res.json(data);
-});
-app.post('/', (req, res) => {
-  if (isEmpty(req.body)) {
-    return res.status(400).json({ message: 'The body cannot be empty' });
-  } else {
-    data.push(req.body);
-    return res.status(200).json({ message: 'Success!', data });
-  }
-});
-
-app.use(routes);
-
-app.use(Sentry.Handlers.errorHandler());
-app.use(errorHandlerMiddleware);
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(3434);

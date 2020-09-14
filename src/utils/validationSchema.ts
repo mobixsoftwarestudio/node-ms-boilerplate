@@ -1,24 +1,25 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { ValidationError } from 'express-validator';
+import { has, Dictionary } from 'lodash';
 
-import lodash from 'lodash';
-export const structureValidationScheme = (
-  error: { message: string; context: { key: string } }[],
-) => {
-  if (!error) return null;
-
-  const errorsMessages = error.map((e) => {
-    const msg = lodash.pick(e, ['message']);
-    return msg.message;
+export const parseErrors = (
+  errors: ValidationError[],
+): Dictionary<{ id: string; message: string }[]> => {
+  const dict = {};
+  errors.forEach((error) => {
+    if (!!dict[error.param]) {
+      if (
+        !dict[error.param].find((singleError: { id: string }) => singleError.id === error.msg.id)
+      ) {
+        dict[error.param].push(error.msg);
+      }
+    } else {
+      // TODO: Refactor this block.
+      if (has(error, ['msg', 'id'])) {
+        dict[error.param] = [error.msg];
+      } else {
+        dict[error.param] = error.msg;
+      }
+    }
   });
-
-  let groupedErrors = lodash
-    .chain(errorsMessages)
-    .groupBy((key) => key.match(/\w+|"[^"]+"/g)[0])
-    .value();
-
-  groupedErrors = lodash.mapKeys(groupedErrors, function(value, key) {
-    return key.replace(/['"]+/g, '');
-  });
-
-  return groupedErrors;
+  return dict;
 };
