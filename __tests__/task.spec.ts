@@ -67,4 +67,12 @@ describe('Task', () => {
 
     done();
   });
+
+  it('List Tasks', async (done) => {
+    const res = await request(app).get(`/task`);
+
+    expect(res.status).toBe(200);
+
+    done();
+  });
 });
