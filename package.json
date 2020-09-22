@@ -14,6 +14,7 @@
     "test-ci": "export NODE_ENV=test && jest --coverage --coverageDirectory=output/coverage/jest"
   },
   "dependencies": {
+    "@mobixtec/visse": "1.0.9",
     "@sentry/node": "5.13.0",
     "@types/express-validator": "^3.0.0",
     "@types/helmet": "^0.0.48",
@@ -69,7 +70,8 @@
     "testEnvironment": "node",
     "moduleFileExtensions": [
       "ts",
-      "js"
+      "js",
+      "json"
     ],
     "transform": {
       ".(js|jsx|ts|tsx)": "@sucrase/jest-plugin"

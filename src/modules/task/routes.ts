@@ -1,8 +1,7 @@
 import { Router } from 'express';
 import { createTask } from './controllers';
 import { validationCreateTask } from './validations';
-import validationMiddleware from '../../utils/validationMiddleware';
-
+import { validationMiddleware } from '@mobixtec/visse';
 const router = Router();
 
 router.post('/', validationCreateTask(), validationMiddleware, createTask);

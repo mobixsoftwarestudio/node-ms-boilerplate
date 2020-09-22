@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Request, Response, NextFunction } from 'express';
-import ErrorHandler from '../../utils/error';
 import TaskModel from './models/task';
+import { filter, pagination, sort, ErrorHandler } from '@mobixtec/visse';
+
+const Error = ErrorHandler.default;
 
 export const createTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -15,10 +17,36 @@ export const createTask = async (req: Request, res: Response, next: NextFunction
       .json(task.serialize())
       .end();
   } catch (error) {
-    if (error instanceof ErrorHandler) {
+    if (error instanceof Error) {
       next(error);
     } else {
-      next(new ErrorHandler(500, error.message));
+      next(new Error(500, error.message));
+    }
+  }
+};
+
+export const listTask = async (req, res, next) => {
+  try {
+    const response = await TaskModel.find({ ...filter.filterQueryStringDate(req) })
+      .sort(sort.sortInFind(req.query.order))
+      .skip(req.query.limit * req.query.page)
+      .limit(req.query.limit);
+
+    const totalCount = await TaskModel.countDocuments({ ...filter.filterQueryStringDate(req) });
+
+    return res.status(200).json(
+      pagination({
+        results: response,
+        totalCount,
+        limit: req.query.limit,
+        page: req.query.page,
+      }),
+    );
+  } catch (error) {
+    if (error instanceof Error) {
+      next(error);
+    } else {
+      next(new Error(500, error.message));
     }
   }
 };

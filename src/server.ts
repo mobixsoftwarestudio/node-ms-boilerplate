@@ -9,7 +9,7 @@ import { Kafka } from 'kafkajs';
 import { parse } from 'flatted/cjs';
 import routes from './modules/routes';
 import database from './database/mongoose';
-import { errorHandlerMiddleware } from './utils/error';
+import { ErrorHandler, setQueryStringList } from '@mobixtec/visse';
 
 config();
 
@@ -20,6 +20,7 @@ let consumer: any;
 
 const app = express();
 
+app.use(setQueryStringList());
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -49,7 +50,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(Sentry.Handlers.errorHandler());
 }
 
-app.use(errorHandlerMiddleware);
+app.use(ErrorHandler.errorHandlerMiddleware);
 
 const startListening = async (): Promise<void> => {
   await consumer.connect();
@@ -64,7 +65,7 @@ const startListening = async (): Promise<void> => {
 };
 
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(3434);
+  app.listen(process.env.PORT || 3434);
   startListening();
 }
 
