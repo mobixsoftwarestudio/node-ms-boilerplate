@@ -12,8 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const error_1 = __importDefault(require("../../utils/error"));
+exports.listTask = exports.createTask = void 0;
 const task_1 = __importDefault(require("./models/task"));
+const visse_1 = require("@mobixtec/visse");
 exports.createTask = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const task = yield task_1.default.create({
@@ -26,11 +27,34 @@ exports.createTask = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             .end();
     }
     catch (error) {
-        if (error instanceof error_1.default) {
+        if (error instanceof visse_1.ErrorHandler) {
             next(error);
         }
         else {
-            next(new error_1.default(500, error.message));
+            next(new visse_1.ErrorHandler(500, error.message));
+        }
+    }
+});
+exports.listTask = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield task_1.default.find(Object.assign({}, visse_1.filter.filterQueryStringDate(req)))
+            .sort(visse_1.sort.sortInFind(req.query.order))
+            .skip(req.query.limit * req.query.page)
+            .limit(req.query.limit);
+        const totalCount = yield task_1.default.countDocuments(Object.assign({}, visse_1.filter.filterQueryStringDate(req)));
+        return res.status(200).json(visse_1.pagination({
+            results: response.map((item) => item.serialize()),
+            totalCount,
+            limit: req.query.limit,
+            page: req.query.page,
+        }));
+    }
+    catch (error) {
+        if (error instanceof visse_1.ErrorHandler) {
+            next(error);
+        }
+        else {
+            next(new visse_1.ErrorHandler(500, error.message));
         }
     }
 });

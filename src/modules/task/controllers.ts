@@ -3,8 +3,6 @@ import { Request, Response, NextFunction } from 'express';
 import TaskModel from './models/task';
 import { filter, pagination, sort, ErrorHandler } from '@mobixtec/visse';
 
-const Error = ErrorHandler.default;
-
 export const createTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const task = await TaskModel.create({
@@ -17,10 +15,10 @@ export const createTask = async (req: Request, res: Response, next: NextFunction
       .json(task.serialize())
       .end();
   } catch (error) {
-    if (error instanceof Error) {
+    if (error instanceof ErrorHandler) {
       next(error);
     } else {
-      next(new Error(500, error.message));
+      next(new ErrorHandler(500, error.message));
     }
   }
 };
@@ -36,17 +34,17 @@ export const listTask = async (req, res, next) => {
 
     return res.status(200).json(
       pagination({
-        results: response,
+        results: response.map((item) => item.serialize()),
         totalCount,
         limit: req.query.limit,
         page: req.query.page,
       }),
     );
   } catch (error) {
-    if (error instanceof Error) {
+    if (error instanceof ErrorHandler) {
       next(error);
     } else {
-      next(new Error(500, error.message));
+      next(new ErrorHandler(500, error.message));
     }
   }
 };

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.validationCreateTask = void 0;
 const express_validator_1 = require("express-validator");
 exports.validationCreateTask = () => [
     express_validator_1.check('title')

@@ -6,10 +6,10 @@ import passport from 'passport';
 import * as Sentry from '@sentry/node';
 import { config } from 'dotenv';
 import { Kafka } from 'kafkajs';
-import { parse } from 'flatted/cjs';
+import { parse } from 'flatted';
 import routes from './modules/routes';
 import database from './database/mongoose';
-import { ErrorHandler, setQueryStringList } from '@mobixtec/visse';
+import { ErrorHandler, setQueryStringList, ErrorHandlerMiddleware } from '@mobixtec/visse';
 
 config();
 
@@ -50,7 +50,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(Sentry.Handlers.errorHandler());
 }
 
-app.use(ErrorHandler.errorHandlerMiddleware);
+app.use(ErrorHandlerMiddleware);
 
 const startListening = async (): Promise<void> => {
   await consumer.connect();

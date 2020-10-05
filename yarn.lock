@@ -464,17 +464,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@mobixtec/visse@1.0.9":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@mobixtec/visse/-/visse-1.0.9.tgz#e6687ea0d192304b1018d3f9aa3b28c5ff585331"
-  integrity sha512-jZ71heVmKch3IqaUGQobA2aL/vRcllGsd221jfiw/74UMERNnpk1LC+p2UcXdhqsqFlofDfbp5nZ/D4ddx7HNw==
-  dependencies:
-    "@types/date-fns" "^2.6.0"
-    "@types/express" "^4.17.8"
-    "@types/express-validator" "^3.0.0"
-    date-fns "^2.16.1"
-    express "^4.17.1"
-    express-validator "^6.6.1"
+"@mobixtec/visse@^1.1.7":
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/@mobixtec/visse/-/visse-1.1.7.tgz#3377c8ad35c3d89e03c7bfc833a0d0533a1d5f1e"
+  integrity sha512-BIdpV5AzQjT7QVFACoDJotQAXnCnlcWz70cFf1jxMYF/fweS4Q/RfR07szQ8exmGc5f2KYScOgE/MPKFJApAuA==
 
 "@sentry/apm@5.13.0":
   version "5.13.0"
@@ -658,13 +651,6 @@
   resolved "https://registry.yarnpkg.com/@types/cookiejar/-/cookiejar-2.1.1.tgz#90b68446364baf9efd8e8349bb36bd3852b75b80"
   integrity sha512-aRnpPa7ysx3aNW60hTiCtLHlQaIFsXFCgQlpakNgDNVFzbtusSY8PwjAQgRWfSk0ekNoBjO51eQRB6upA9uuyw==
 
-"@types/date-fns@^2.6.0":
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/@types/date-fns/-/date-fns-2.6.0.tgz#b062ca46562002909be0c63a6467ed173136acc1"
-  integrity sha1-sGLKRlYgApCb4MY6ZGftFzE2rME=
-  dependencies:
-    date-fns "*"
-
 "@types/eslint-visitor-keys@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@types/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
@@ -686,7 +672,7 @@
   dependencies:
     express-validator "*"
 
-"@types/express@*", "@types/express@^4.17.2", "@types/express@^4.17.8":
+"@types/express@*", "@types/express@4.17.8":
   version "4.17.8"
   resolved "https://registry.yarnpkg.com/@types/express/-/express-4.17.8.tgz#3df4293293317e61c60137d273a2e96cd8d5f27a"
   integrity sha512-wLhcKh3PMlyA2cNAB9sjM1BntnhPMiM0JOBwPBqttjHev2428MLEB4AYVN+d8s2iyCVZac+o41Pflm/ZH5vLXQ==
@@ -1866,7 +1852,7 @@ data-urls@^1.1.0:
     whatwg-mimetype "^2.2.0"
     whatwg-url "^7.0.0"
 
-date-fns@*, date-fns@^2.16.1:
+date-fns@^2.16.1:
   version "2.16.1"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.16.1.tgz#05775792c3f3331da812af253e1a935851d3834b"
   integrity sha512-sAJVKx/FqrLYHAQeN7VpJrPhagZc9R4ImZIWYRFZaaohR3KzmuK88touwsSwSVT8Qcbd4zoDsnGfX4GFB4imyQ==
@@ -2730,10 +2716,10 @@ flatted@^2.0.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-2.0.2.tgz#4575b21e2bcee7434aa9be662f4b7b5f9c2b5138"
   integrity sha512-r5wGx7YeOwNWNlCA0wQ86zKyDLMQr+/RB8xy74M4hTphfmjlijTSSXGuH8rnvKZnfT9i+75zmd8jcKdMR4O6jA==
 
-flatted@^3.0.5:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.0.5.tgz#2db8faa9fc50b48b7c4ba3d6399846538fdab9f6"
-  integrity sha512-bDEpEsHk2pHn4R+slxblk0N0gK5lQsK2aRwW6LJyIpX3o9qhoVkufDjDvU3fpSJbR7UgOl+icRoR9agYyjzMTw==
+flatted@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.1.0.tgz#a5d06b4a8b01e3a63771daa5cb7a1903e2e57067"
+  integrity sha512-tW+UkmtNg/jv9CSofAKvgVcO7c2URjhTdW1ZTkcAritblu8tajiYy7YisnIflEwtKssCtOxpnBRoCB7iap0/TA==
 
 for-in@^1.0.2:
   version "1.0.2"
