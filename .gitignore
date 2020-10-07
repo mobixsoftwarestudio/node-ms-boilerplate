@@ -4,3 +4,6 @@ node_modules
 # Ignore built ts files
 dist/**/*
 output/**/*
+
+yarn-error.log
+package-lock.json
