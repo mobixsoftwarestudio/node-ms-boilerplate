@@ -24,10 +24,11 @@ const jwtOpts = {
     issuer: JWT_ISSUER,
     audience: JWT_AUDIENCE,
 };
-exports.usePassport = () => {
+const usePassport = () => {
     const jwtStrategy = new passport_jwt_1.default.Strategy(jwtOpts, (payload, done) => __awaiter(void 0, void 0, void 0, function* () {
         return done(null, payload);
     }));
     passport_1.default.use(jwtStrategy);
 };
+exports.usePassport = usePassport;
 //# sourceMappingURL=passport-helper.js.map

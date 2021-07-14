@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.listTask = exports.createTask = void 0;
 const task_1 = __importDefault(require("./models/task"));
 const visse_1 = require("@mobixtec/visse");
-exports.createTask = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const createTask = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const task = yield task_1.default.create({
             title: req.body.title,
@@ -35,7 +35,8 @@ exports.createTask = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         }
     }
 });
-exports.listTask = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.createTask = createTask;
+const listTask = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield task_1.default.find(Object.assign({}, visse_1.filter.filterQueryStringDate(req)))
             .sort(visse_1.sort.sortInFind(req.query.order))
@@ -58,4 +59,5 @@ exports.listTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         }
     }
 });
+exports.listTask = listTask;
 //# sourceMappingURL=controllers.js.map

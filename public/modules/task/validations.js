@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validationCreateTask = void 0;
 const express_validator_1 = require("express-validator");
-exports.validationCreateTask = () => [
+const validationCreateTask = () => [
     express_validator_1.check('title')
         .exists()
         .withMessage({
@@ -16,4 +16,5 @@ exports.validationCreateTask = () => [
         message: 'Description is required',
     }),
 ];
+exports.validationCreateTask = validationCreateTask;
 //# sourceMappingURL=validations.js.map

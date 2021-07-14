@@ -1,0 +1,25 @@
+service: serverless-node-ms-boilerplate
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage:  ${opt:stage, 'dev'}
+  region: us-east-1
+
+functions:
+  app:
+    warmup: true
+    provisionedConcurrency: 5
+    handler: src/server.handler
+    events:
+      - http:
+          method: ANY
+          path: /{proxy+}
+          cors: true
+
+plugins:
+  - serverless-plugin-warmup
+  - serverless-plugin-typescript
+  - serverless-dotenv-plugin

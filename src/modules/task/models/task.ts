@@ -3,6 +3,8 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface Task extends Document {
   title: string;
   description: string;
+  createdAt: Date;
+  updatedAt: Date;
   serialize: Function;
 }
 
@@ -10,11 +12,11 @@ interface SerializedTask {
   _id: string;
   title: string;
   description: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-const TaskSchema = new Schema(
+const TaskSchema: Schema<Task> = new Schema(
   {
     title: { type: String, required: true, unique: true },
     description: { type: String, required: true },

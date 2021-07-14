@@ -7,3 +7,5 @@ output/**/*
 
 yarn-error.log
 package-lock.json
+
+.serverless
